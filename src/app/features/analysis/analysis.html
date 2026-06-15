@@ -1,0 +1,96 @@
+<div class="analysis">
+
+  <div class="page-header">
+    <h1>弱點分析</h1>
+  </div>
+
+  @if (totalRecords() === 0) {
+    <div class="empty">
+      <div class="empty-icon">📊</div>
+      <p>還沒有練習紀錄，去練習頁新增後再來看分析！</p>
+    </div>
+  } @else {
+
+    <!-- 總覽 -->
+    <div class="summary-row">
+      <div class="summary-card">
+        <div class="s-value">{{ totalRecords() }}</div>
+        <div class="s-label">總練習次數</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-value accent">{{ avgAccuracy() }}%</div>
+        <div class="s-label">平均正確率</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-value warn">{{ weakParts().length }}</div>
+        <div class="s-label">待加強 Part 數</div>
+      </div>
+    </div>
+
+    <!-- 弱點警示 -->
+    @if (weakParts().length > 0) {
+      <div class="weak-card">
+        <div class="weak-title">⚠️ 需要加強的部分（正確率 &lt; 70%）</div>
+        @for (s of weakParts(); track s.part) {
+          <div class="weak-row">
+            <span class="badge" [class.listening]="s.type==='listening'" [class.reading]="s.type==='reading'">
+              {{ s.label }}
+            </span>
+            <span class="weak-acc">{{ s.accuracy }}%</span>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- 聽力分析 -->
+    <div class="chart-card">
+      <div class="chart-title">🎧 聽力各 Part 正確率</div>
+      @for (s of listeningStats(); track s.part) {
+        <div class="bar-row">
+          <span class="bar-label">Part{{ s.part }}</span>
+          <div class="bar-track">
+            <div class="bar-fill"
+              [style.width.%]="s.accuracy"
+              [style.background]="barColor(s.accuracy, s.total)">
+            </div>
+          </div>
+          <span class="bar-value">
+            @if (s.total > 0) { {{ s.accuracy }}% }
+            @else { 未練習 }
+          </span>
+          <span class="bar-count">{{ s.correct }}/{{ s.total }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- 閱讀分析 -->
+    <div class="chart-card">
+      <div class="chart-title">📖 閱讀各 Part 正確率</div>
+      @for (s of readingStats(); track s.part) {
+        <div class="bar-row">
+          <span class="bar-label">Part{{ s.part }}</span>
+          <div class="bar-track">
+            <div class="bar-fill"
+              [style.width.%]="s.accuracy"
+              [style.background]="barColor(s.accuracy, s.total)">
+            </div>
+          </div>
+          <span class="bar-value">
+            @if (s.total > 0) { {{ s.accuracy }}% }
+            @else { 未練習 }
+          </span>
+          <span class="bar-count">{{ s.correct }}/{{ s.total }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- 圖例 -->
+    <div class="legend">
+      <span class="dot green"></span>≥80% 良好
+      <span class="dot orange"></span>60–79% 普通
+      <span class="dot red"></span>&lt;60% 需加強
+      <span class="dot gray"></span>未練習
+    </div>
+
+  }
+</div>

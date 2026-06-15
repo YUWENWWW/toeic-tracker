@@ -1,0 +1,119 @@
+<div class="practice">
+
+  <div class="page-header">
+    <h1>練習紀錄</h1>
+    <button class="btn-primary" (click)="showForm.set(true)">✏️ 新增</button>
+  </div>
+
+  <!-- 新增表單 -->
+  @if (showForm()) {
+    <div class="form-card">
+      <div class="form-title">新增練習紀錄</div>
+
+      <div class="form-row">
+        <label>日期</label>
+        <input type="date" [value]="form().date"
+          (change)="updateForm({date: $any($event.target).value})"/>
+      </div>
+
+      <div class="form-row">
+        <label>類型</label>
+        <div class="toggle-group">
+          <button [class.active]="form().type === 'listening'"
+            (click)="updateForm({type: 'listening'})">聽力</button>
+          <button [class.active]="form().type === 'reading'"
+            (click)="updateForm({type: 'reading'})">閱讀</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Part</label>
+        <div class="part-group">
+          @for (p of parts(); track p) {
+            <button [class.active]="form().part === p"
+              (click)="updateForm({part: $any(p)})">
+              Part{{ p }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>總題數</label>
+        <input type="number" min="1" max="100"
+          [value]="form().totalQuestions"
+          (input)="updateForm({totalQuestions: +$any($event.target).value})"/>
+      </div>
+
+      <div class="form-row">
+        <label>答對題數</label>
+        <div class="score-row">
+          <input type="number" min="0" [max]="form().totalQuestions"
+            [value]="form().correctAnswers"
+            (input)="updateForm({correctAnswers: +$any($event.target).value})"/>
+          <span class="accuracy-badge">{{ accuracy() }}%</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>練習時間</label>
+        <div class="time-row">
+          <input type="number" min="1" max="180"
+            [value]="form().durationMinutes"
+            (input)="updateForm({durationMinutes: +$any($event.target).value})"/>
+          <span>分鐘</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>備註</label>
+        <input type="text" placeholder="選填"
+          [value]="form().notes"
+          (input)="updateForm({notes: $any($event.target).value})"/>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-cancel" (click)="showForm.set(false)">取消</button>
+        <button class="btn-primary" (click)="submit()">儲存</button>
+      </div>
+    </div>
+  }
+
+  <!-- 紀錄列表 -->
+  @if (sortedRecords().length === 0) {
+    <div class="empty">
+      <div class="empty-icon">📝</div>
+      <p>還沒有紀錄，點右上角新增！</p>
+    </div>
+  }
+
+  @for (r of sortedRecords(); track r.id) {
+    <div class="record-card">
+      <div class="record-top">
+        <span class="badge" [class.listening]="r.type==='listening'" [class.reading]="r.type==='reading'">
+          {{ r.type === 'listening' ? '聽力' : '閱讀' }} {{ partLabel(r.type, r.part) }}
+        </span>
+        <span class="record-date">{{ r.date }}</span>
+        <button class="btn-delete" (click)="delete(r.id)">🗑</button>
+      </div>
+      <div class="record-stats">
+        <div class="stat">
+          <span class="stat-value">{{ r.correctAnswers }}/{{ r.totalQuestions }}</span>
+          <span class="stat-label">答對/總題</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value accent">{{ (r.correctAnswers/r.totalQuestions*100).toFixed(0) }}%</span>
+          <span class="stat-label">正確率</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">{{ r.durationMinutes }}</span>
+          <span class="stat-label">分鐘</span>
+        </div>
+      </div>
+      @if (r.notes) {
+        <div class="record-notes">💬 {{ r.notes }}</div>
+      }
+    </div>
+  }
+
+</div>

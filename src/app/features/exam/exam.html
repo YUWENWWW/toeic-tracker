@@ -1,0 +1,105 @@
+<div class="exam">
+
+  <div class="page-header">
+    <h1>模擬考紀錄</h1>
+    <button class="btn-primary" (click)="showForm.set(true)">➕ 新增紀錄</button>
+  </div>
+
+  <!-- 目標提示 -->
+  <div class="target-bar">
+    🎯 目標分數：<strong>785</strong>　考試日期：<strong>2026/10/18</strong>
+  </div>
+
+  <!-- 統計 -->
+  @if (exams().length > 0) {
+    <div class="summary-row">
+      <div class="summary-card">
+        <div class="s-value" [style.color]="scoreColor(latest()?.totalScore ?? 0)">
+          {{ latest()?.totalScore ?? '-' }}
+        </div>
+        <div class="s-label">最新成績</div>
+        <div class="s-sub">L{{ latest()?.listeningScore }} + R{{ latest()?.readingScore }}</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-value" [style.color]="scoreColor(best()?.totalScore ?? 0)">
+          {{ best()?.totalScore ?? '-' }}
+        </div>
+        <div class="s-label">最高成績</div>
+      </div>
+      <div class="summary-card">
+        <div class="s-value" [class.up]="trend()?.startsWith('+')" [class.down]="trend()?.startsWith('-')">
+          {{ trend() ?? '-' }}
+        </div>
+        <div class="s-label">與上次相比</div>
+      </div>
+    </div>
+  }
+
+  <!-- 新增表單 -->
+  @if (showForm()) {
+    <div class="form-card">
+      <div class="form-title">新增模擬考紀錄</div>
+      <div class="form-row">
+        <label>日期</label>
+        <input type="date" [value]="form().date"
+          (change)="updateForm({date: $any($event.target).value})"/>
+      </div>
+      <div class="form-row">
+        <label>聽力</label>
+        <input type="number" min="0" max="495" placeholder="0–495"
+          [value]="form().listeningScore"
+          (input)="updateForm({listeningScore: +$any($event.target).value})"/>
+        <span class="hint">最高 495</span>
+      </div>
+      <div class="form-row">
+        <label>閱讀</label>
+        <input type="number" min="0" max="495" placeholder="0–495"
+          [value]="form().readingScore"
+          (input)="updateForm({readingScore: +$any($event.target).value})"/>
+        <span class="hint">最高 495</span>
+      </div>
+      <div class="total-preview">
+        總分預覽：<span [style.color]="scoreColor(totalPreview())">{{ totalPreview() }}</span>
+        <span class="target-gap">
+          @if (totalPreview() >= 785) { 🎉 已達目標！ }
+          @else { 距目標還差 {{ 785 - totalPreview() }} 分 }
+        </span>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" (click)="showForm.set(false)">取消</button>
+        <button class="btn-primary" (click)="submit()">儲存</button>
+      </div>
+    </div>
+  }
+
+  <!-- 歷次紀錄 -->
+  @if (sorted().length === 0) {
+    <div class="empty">
+      <div class="empty-icon">📝</div>
+      <p>還沒有模擬考紀錄，點右上角新增！</p>
+    </div>
+  }
+
+  @for (e of sorted(); track e.id) {
+    <div class="exam-card">
+      <div class="exam-round">第 {{ e.round }} 次</div>
+      <div class="exam-date">{{ e.date }}</div>
+      <div class="exam-scores">
+        <span class="score-item">🎧 {{ e.listeningScore }}</span>
+        <span class="score-item">📖 {{ e.readingScore }}</span>
+        <span class="score-total" [style.color]="scoreColor(e.totalScore)">
+          = {{ e.totalScore }}
+        </span>
+      </div>
+      <div class="exam-gap">
+        @if (e.totalScore >= 785) {
+          <span class="badge-pass">✓ 達標</span>
+        } @else {
+          <span class="badge-gap">差 {{ 785 - e.totalScore }}</span>
+        }
+      </div>
+      <button class="btn-delete" (click)="delete(e.id)">🗑</button>
+    </div>
+  }
+
+</div>

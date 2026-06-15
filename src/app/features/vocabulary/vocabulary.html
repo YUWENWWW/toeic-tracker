@@ -1,0 +1,69 @@
+<div class="vocabulary">
+
+  <div class="page-header">
+    <h1>單字本</h1>
+    <button class="btn-primary" (click)="showForm.set(true)">➕ 新增單字</button>
+  </div>
+
+  <!-- 統計 -->
+  <div class="stats-row">
+    <div class="stat-chip total">全部 {{ stats().total }}</div>
+    <div class="stat-chip unknown"  (click)="filterStatus.set('unknown')"  [class.active]="filterStatus()==='unknown'">未熟悉 {{ stats().unknown }}</div>
+    <div class="stat-chip learning" (click)="filterStatus.set('learning')" [class.active]="filterStatus()==='learning'">複習中 {{ stats().learning }}</div>
+    <div class="stat-chip mastered" (click)="filterStatus.set('mastered')" [class.active]="filterStatus()==='mastered'">已熟悉 {{ stats().mastered }}</div>
+    <div class="stat-chip" (click)="filterStatus.set('all')" [class.active]="filterStatus()==='all'">顯示全部</div>
+  </div>
+
+  <!-- 新增表單 -->
+  @if (showForm()) {
+    <div class="form-card">
+      <div class="form-title">新增單字</div>
+      <div class="form-row">
+        <label>單字</label>
+        <input type="text" placeholder="e.g. negotiate"
+          [value]="newWord().word"
+          (input)="newWord.update(v => ({...v, word: $any($event.target).value}))"/>
+      </div>
+      <div class="form-row">
+        <label>中文</label>
+        <input type="text" placeholder="e.g. 談判、協商"
+          [value]="newWord().meaning"
+          (input)="newWord.update(v => ({...v, meaning: $any($event.target).value}))"/>
+      </div>
+      <div class="form-actions">
+        <button class="btn-cancel" (click)="showForm.set(false)">取消</button>
+        <button class="btn-primary" (click)="add()">新增</button>
+      </div>
+    </div>
+  }
+
+  <!-- 單字列表 -->
+  @if (filtered().length === 0) {
+    <div class="empty">
+      <div class="empty-icon">📖</div>
+      <p>@if (filterStatus() === 'all') { 還沒有單字，點右上角新增！ } @else { 這個分類目前沒有單字 }</p>
+    </div>
+  }
+
+  @for (item of filtered(); track item.id) {
+    <div class="word-card" [class.mastered]="item.status === 'mastered'">
+      <div class="word-main">
+        <div class="word-text">{{ item.word }}</div>
+        <div class="word-meaning">{{ item.meaning }}</div>
+      </div>
+      <div class="word-actions">
+        <button class="status-btn unknown"
+          [class.active]="item.status === 'unknown'"
+          (click)="updateStatus(item.id, 'unknown')">✗ 未熟悉</button>
+        <button class="status-btn learning"
+          [class.active]="item.status === 'learning'"
+          (click)="updateStatus(item.id, 'learning')">△ 複習中</button>
+        <button class="status-btn mastered"
+          [class.active]="item.status === 'mastered'"
+          (click)="updateStatus(item.id, 'mastered')">✓ 已熟悉</button>
+        <button class="btn-delete" (click)="delete(item.id)">🗑</button>
+      </div>
+    </div>
+  }
+
+</div>

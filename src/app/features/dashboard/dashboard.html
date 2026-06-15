@@ -1,0 +1,80 @@
+<div class="dashboard">
+
+  <div class="page-header">
+    <h1>備考儀表板</h1>
+    <a class="btn-primary" routerLink="/practice">✏️ 新增練習</a>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card blue">
+      <div class="kpi-value">{{ daysLeft() }}</div>
+      <div class="kpi-label">距考試天數</div>
+      <div class="kpi-sub">2026/10/18</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-value">{{ weeklyDays() }}<span class="unit">/7</span></div>
+      <div class="kpi-label">本週練習天數</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-value">{{ totalHours() }}<span class="unit">hr</span></div>
+      <div class="kpi-label">累計練習時數</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-value">{{ overallAccuracy() }}<span class="unit">%</span></div>
+      <div class="kpi-label">整體正確率</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">聽力 / 閱讀 正確率</div>
+    <div class="progress-row">
+      <span class="plabel">聽力</span>
+      <div class="progress-track">
+        <div class="progress-fill blue" [style.width.%]="listeningAccuracy()"></div>
+      </div>
+      <span class="pvalue">{{ listeningAccuracy() }}%</span>
+    </div>
+    <div class="progress-row">
+      <span class="plabel">閱讀</span>
+      <div class="progress-track">
+        <div class="progress-fill purple" [style.width.%]="readingAccuracy()"></div>
+      </div>
+      <span class="pvalue">{{ readingAccuracy() }}%</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">最近練習紀錄</div>
+      <a routerLink="/practice" class="btn-link">全部查看</a>
+    </div>
+
+    @if (recentRecords().length === 0) {
+      <div class="empty">
+        <div class="empty-icon">📝</div>
+        <p>還沒有練習紀錄，點右上角開始記錄！</p>
+      </div>
+    }
+
+    @for (r of recentRecords(); track r.id) {
+      <div class="record-row">
+        <span class="record-date">{{ r.date }}</span>
+        <span class="badge" [class.listening]="r.type === 'listening'" [class.reading]="r.type === 'reading'">
+          {{ r.type === 'listening' ? '聽力' : '閱讀' }} Part{{ r.part }}
+        </span>
+        <span class="record-score">
+          {{ r.correctAnswers }}/{{ r.totalQuestions }}
+          ({{ (r.correctAnswers / r.totalQuestions * 100).toFixed(0) }}%)
+        </span>
+        <span class="record-time">{{ r.durationMinutes }}分鐘</span>
+      </div>
+    }
+  </div>
+
+  <div class="nav-grid">
+    <a routerLink="/analysis"   class="btn-outline">📊 弱點分析</a>
+    <a routerLink="/vocabulary" class="btn-outline">📖 單字本</a>
+    <a routerLink="/exam"       class="btn-outline">📝 模擬考</a>
+  </div>
+
+</div>
