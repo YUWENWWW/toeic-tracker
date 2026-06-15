@@ -1,13 +1,12 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { VocabularyItem } from '../../core/models/vocabulary.model';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-vocabulary',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './vocabulary.html',
   styleUrl: './vocabulary.css'
 })
@@ -17,7 +16,6 @@ export class Vocabulary {
   items = signal<VocabularyItem[]>(this.load());
   showForm = signal(false);
   filterStatus = signal<'all' | 'unknown' | 'learning' | 'mastered'>('all');
-
   newWord = signal({ word: '', meaning: '' });
 
   filtered = computed(() => {
@@ -31,6 +29,14 @@ export class Vocabulary {
     mastered: this.items().filter(i => i.status === 'mastered').length,
     total:    this.items().length,
   }));
+
+  setWord(value: string) {
+    this.newWord.update(v => ({ ...v, word: value }));
+  }
+
+  setMeaning(value: string) {
+    this.newWord.update(v => ({ ...v, meaning: value }));
+  }
 
   add() {
     const { word, meaning } = this.newWord();

@@ -5,7 +5,6 @@
     <button class="btn-primary" (click)="showForm.set(true)">➕ 新增單字</button>
   </div>
 
-  <!-- 統計 -->
   <div class="stats-row">
     <div class="stat-chip total">全部 {{ stats().total }}</div>
     <div class="stat-chip unknown"  (click)="filterStatus.set('unknown')"  [class.active]="filterStatus()==='unknown'">未熟悉 {{ stats().unknown }}</div>
@@ -14,7 +13,6 @@
     <div class="stat-chip" (click)="filterStatus.set('all')" [class.active]="filterStatus()==='all'">顯示全部</div>
   </div>
 
-  <!-- 新增表單 -->
   @if (showForm()) {
     <div class="form-card">
       <div class="form-title">新增單字</div>
@@ -22,13 +20,13 @@
         <label>單字</label>
         <input type="text" placeholder="e.g. negotiate"
           [value]="newWord().word"
-          (input)="newWord.update(v => ({...v, word: $any($event.target).value}))"/>
+          (input)="setWord($any($event.target).value)"/>
       </div>
       <div class="form-row">
         <label>中文</label>
         <input type="text" placeholder="e.g. 談判、協商"
           [value]="newWord().meaning"
-          (input)="newWord.update(v => ({...v, meaning: $any($event.target).value}))"/>
+          (input)="setMeaning($any($event.target).value)"/>
       </div>
       <div class="form-actions">
         <button class="btn-cancel" (click)="showForm.set(false)">取消</button>
@@ -37,11 +35,14 @@
     </div>
   }
 
-  <!-- 單字列表 -->
   @if (filtered().length === 0) {
     <div class="empty">
       <div class="empty-icon">📖</div>
-      <p>@if (filterStatus() === 'all') { 還沒有單字，點右上角新增！ } @else { 這個分類目前沒有單字 }</p>
+      @if (filterStatus() === 'all') {
+        <p>還沒有單字，點右上角新增！</p>
+      } @else {
+        <p>這個分類目前沒有單字</p>
+      }
     </div>
   }
 
