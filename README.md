@@ -1,59 +1,81 @@
-# ToeicTracker
+# 📚 TOEIC Tracker
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.1.
+A personal TOEIC exam preparation tracker built with Angular 22.  
+Track practice sessions, analyze weak points, manage vocabulary, and record mock exam scores.
 
-## Development server
+🔗 **Live Demo**: https://yuwenwww.github.io/toeic-tracker/
 
-To start a local development server, run:
+---
+
+## Features
+
+| Page | Description |
+|------|-------------|
+| 🏠 Dashboard | KPI overview — days left, weekly practice days, total hours, accuracy |
+| ✏️ Practice Log | Add / delete practice records by Part, with real-time accuracy calculation |
+| 📊 Weakness Analysis | Per-Part accuracy bar charts with color-coded performance indicators |
+| 📖 Vocabulary | Word bank with 3-tier status tracking (unknown / learning / mastered) |
+| 📝 Mock Exams | Record full mock exam scores, track progress trend vs. target (785) |
+
+---
+
+## Tech Stack
+
+- **Framework**: Angular 22 (Standalone Components)
+- **State Management**: Angular Signals (`signal`, `computed`)
+- **Routing**: Angular Router with lazy loading
+- **Storage**: localStorage (no backend required)
+- **Styling**: Pure CSS with CSS nesting
+- **Deployment**: GitHub Pages via gh-pages
+
+---
+
+## Angular Concepts Demonstrated
+
+- Standalone components with `imports` array
+- Reactive state with `signal()` and `computed()`
+- Two-way data binding with `FormsModule`
+- Lazy-loaded routes with `loadComponent`
+- Dependency injection with `inject()`
+- Template control flow with `@if` / `@for` (Angular 17+ syntax)
+- Service layer with localStorage persistence
+
+---
+
+## Project Structure
+---
+
+## Getting Started
 
 ```bash
+git clone https://github.com/YUWENWWW/toeic-tracker.git
+cd toeic-tracker
+npm install
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200`
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Deploy
 
 ```bash
-ng generate --help
+npm run deploy
 ```
 
-## Building
+Builds and publishes to `gh-pages` branch automatically.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## Background
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Built as **Project D** in a self-directed Angular learning roadmap.  
+Designed for personal TOEIC preparation (target: 785, exam date: 2026/10/18).  
+Intentionally uses localStorage over a backend to keep the architecture simple  
+and demonstrate pure Angular frontend capabilities.
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Learning roadmap:**
+- ✅ Project D — TOEIC Tracker (this project)
+- 🔜 Project A — PKI Certificate Management Dashboard (Spring Boot backend)
+- 🔜 Project C — ETF Investment Dashboard (Anthropic API integration)
